@@ -79,7 +79,7 @@ my_data = list(
 nhfit = stan(file = 'non_hier_model.stan', data = my_data)
 ```
 ```{r}
-print(nhfit)
+print(nhfit, pars=c("theta1","theta2"),include=FALSE)
 ```
 `Plot the predicted scores of the last 5 matches
 ```{r, fig.height=5, fig.width=5}
@@ -150,7 +150,7 @@ hfit = stan(file = 'hier_model.stan', data = my_data)
 ```
 
 ```{r}
-print(hfit)
+print(hfit, pars=c("theta1","theta2"),include=FALSE)
 ```
 
 ```{r}

@@ -26,7 +26,7 @@ soccer_df <- read_csv(
 soccer_df
 
 #mod1_formula <- Score ~ 0 + At_home + def + (1 | Attack) + (0 + def | Defend)
-mod1_formula <- Score ~ 0 + At_home + (1 | Attack) + (1 | Defend)
+mod1_formula <- Score ~ 1 + At_home + (1 | Attack) + (1 | Defend)
 priors_default <- get_prior(
   formula = mod1_formula,
   family  = poisson(link = "log"),
