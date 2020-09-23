@@ -1,6 +1,10 @@
 ---
 title: "Hierarchical modelling tutorial"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
+urlcolor: blue
+linkcolor: red
 ---
 
 This notebook is a tutorial on Hierarchical modelling using Stan that accompanies the youtube video https://youtu.be/dNZQrcAjgXQ
@@ -12,7 +16,7 @@ set.seed(1) #set seed
 
 First we read in the data
 ```{r}
-data = read.csv('/Users/maggielieu/Desktop/STAN/GITHUB/STAN_tutorials/Hierarchical/premiereleague.csv',col.names = c('Home','score1', 'score2', 'Away'), stringsAsFactors = FALSE)
+data = read.csv('premiereleague.csv',col.names = c('Home','score1', 'score2', 'Away'), stringsAsFactors = FALSE)
 ```
 
 ```{r}
