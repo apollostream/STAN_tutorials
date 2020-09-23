@@ -17,16 +17,16 @@ soccer_df <- read_csv(
   mutate(
     At_home = as.integer(Side=="H"),
     Attack  = ifelse(At_home,Home,Away),
-    Defend  = ifelse(!At_home,Home,Away),
-    def     = -1
+    Defend  = ifelse(!At_home,Home,Away) #,
+    # def     = -1
   ) %>%
-  select(Game, Score, Attack, Defend, At_home, def ) %>%
+  select(Game, Score, Attack, Defend, At_home) %>% #, def ) %>%
   mutate(across(c(Attack,Defend),as.factor))
 
 soccer_df
 
 #mod1_formula <- Score ~ 0 + At_home + def + (1 | Attack) + (0 + def | Defend)
-mod1_formula <- Score ~ 1 + At_home + (1 | Attack) + (1 | Defend)
+mod1_formula <- Score ~ At_home + (1 | Attack) + (1 | Defend)
 priors_default <- get_prior(
   formula = mod1_formula,
   family  = poisson(link = "log"),
@@ -34,6 +34,7 @@ priors_default <- get_prior(
 )
 priors_default
 priors0 <- set_prior( "student_t(3,0,0.1)", class = "b", lb = 0 ) +
+  set_prior( "student_t(3,0,0.2)", class = "Intercept" ) +
   set_prior( "student_t(3,0,0.3)", class = "sd" )
 priors0
 
@@ -83,11 +84,11 @@ coef(brm_post) %>%
   tibble(
     Team   = str_wrap( dimnames(.$Attack)[[1]],13),
     Attack = .$Attack[,"Estimate","Intercept"],
-    xmin=.$Attack[,"Q2.5","Intercept"],
-    xmax=.$Attack[,"Q97.5","Intercept"],
+    xmin   = .$Attack[,"Q2.5","Intercept"],
+    xmax   = .$Attack[,"Q97.5","Intercept"],
     Defend = -(.$Defend[,"Estimate","Intercept"]),
-    ymin= -(.$Defend[,"Q2.5","Intercept"]),
-    ymax= -(.$Defend[,"Q97.5","Intercept"])
+    ymax   = -(.$Defend[,"Q2.5","Intercept"]),
+    ymin   = -(.$Defend[,"Q97.5","Intercept"])
   )
 } %>%
   {
