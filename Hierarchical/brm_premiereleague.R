@@ -101,5 +101,25 @@ coef(brm_post) %>%
       labs(title = "Team Strengths")
   } %>%
   print()
+
+bind_cols(soccer_df,as_tibble(fitted(brm_post))) %>% 
+  group_by(Game) %>% 
+  summarize(
+    Home_margin = -diff(Score),
+    Home_margin_pred = -diff(Estimate),
+    Winner = Attack[which.max(Score)],
+    Loser=Attack[which.min(Score)],
+    Winner_pred = Attack[which.max(Estimate)],
+    Loser_pred=Attack[which.min(Estimate)],
+    .groups="drop"
+  ) %>%
+  {
+    ggplot(.,aes(x=Home_margin,y=Home_margin_pred)) +
+      geom_point(size=5,color="blue",alpha=0.5) + 
+      geom_point(size=2,color="black") +
+      geom_smooth(method=lm,formula=y ~ x)
+  } %>%
+  print()
+
 # rm(brm_post,brm_prior_only)
 # gc()
